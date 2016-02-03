@@ -28,7 +28,8 @@ public class InstagramViewerActivity extends AppCompatActivity {
     private ArrayList<InstagramPhoto> photos;
     private InstagramPhotosAdapter mInstagramPhotosAdapter;
 
-    @Bind(R.id.lvItems) ListView mLvItems;
+    @Bind(R.id.lvItems)
+    ListView mLvItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,18 @@ public class InstagramViewerActivity extends AppCompatActivity {
 
                     for (int i = 0; i < photosJson.length(); i++) {
                         JSONObject photoJson = photosJson.getJSONObject(i);
-
                         InstagramPhoto photo = new InstagramPhoto();
                         photo.setUsername(photoJson.getJSONObject("user").getString("username"));
-                        photo.setCaption(photoJson.optJSONObject("caption").getString("text"));
+                        photo.setUserProfilePictureUrl(
+                                photoJson.getJSONObject("user").getString("profile_picture"));
+
+                        JSONObject captionJson = photoJson.optJSONObject("caption");
+                        if (captionJson == null) {
+                            photo.setCaption("");
+                        } else {
+                            photo.setCaption(captionJson.getString("text"));
+                        }
+
                         photo.setImageUrl(
                                 photoJson
                                         .getJSONObject("images")
@@ -78,10 +87,9 @@ public class InstagramViewerActivity extends AppCompatActivity {
                                         .getInt("height"));
                         photo.setLikesCount(
                                 photoJson.getJSONObject("likes").getInt("count"));
+                        photo.setCreatedTime(
+                                photoJson.getLong("created_time"));
 
-                        if (photo.getCaption() == null) {
-                            continue;
-                        }
                         photos.add(photo);
                     }
                 } catch (JSONException je) {

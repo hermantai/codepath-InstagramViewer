@@ -3,9 +3,11 @@ package com.gmail.htaihm.instagramviewer;
 public class InstagramPhoto {
     private String mUsername;
     private String mCaption = "hello";
-    private String imageUrl;
-    private int imageHeight;
-    private int likesCount;
+    private String mImageUrl;
+    private int mImageHeight;
+    private int mLikesCount;
+    private String mUserProfilePictureUrl;
+    private long mCreatedTime;
 
     public String getUsername() {
         return mUsername;
@@ -24,27 +26,43 @@ public class InstagramPhoto {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return mImageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+        this.mImageUrl = imageUrl;
     }
 
     public int getImageHeight() {
-        return imageHeight;
+        return mImageHeight;
     }
 
     public void setImageHeight(int imageHeight) {
-        this.imageHeight = imageHeight;
+        this.mImageHeight = imageHeight;
     }
 
     public int getLikesCount() {
-        return likesCount;
+        return mLikesCount;
     }
 
     public void setLikesCount(int likesCount) {
-        this.likesCount = likesCount;
+        this.mLikesCount = likesCount;
+    }
+
+    public String getUserProfilePictureUrl() {
+        return mUserProfilePictureUrl;
+    }
+
+    public void setUserProfilePictureUrl(String userProfilePictureUrl) {
+        mUserProfilePictureUrl = userProfilePictureUrl;
+    }
+
+    public long getCreatedTime() {
+        return mCreatedTime;
+    }
+
+    public void setCreatedTime(long createdTime) {
+        mCreatedTime = createdTime;
     }
 
     @Override

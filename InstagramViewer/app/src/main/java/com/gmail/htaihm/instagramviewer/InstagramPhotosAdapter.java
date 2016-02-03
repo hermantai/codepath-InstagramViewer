@@ -1,6 +1,7 @@
 package com.gmail.htaihm.instagramviewer;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,17 +43,30 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
     static class ViewHolder {
         @Bind(R.id.ivPhoto) ImageView mIvPhoto;
         @Bind(R.id.tvCaption) TextView mTvCaption;
+        @Bind(R.id.ivUserProfile) ImageView mIvUserProfile;
+        @Bind(R.id.tvUsername) TextView mTvUsername;
+        @Bind(R.id.tvRelativeTimestamp) TextView mTvRelativeTimestamp;
+        @Bind(R.id.tvLikeCounts) TextView mTvLikeCounts;
 
         private ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
         private void bindPhoto(Context context, InstagramPhoto photo) {
-            mTvCaption.setText(photo.getCaption());
+            mTvUsername.setText(photo.getUsername());
+            Picasso.with(context)
+                    .load(photo.getUserProfilePictureUrl())
+                    .into(mIvUserProfile);
+            mTvRelativeTimestamp.setText(
+                    DateUtils.getRelativeTimeSpanString(context, photo.getCreatedTime() * 1000));
+
             mIvPhoto.setImageResource(0);
             Picasso.with(context)
                     .load(photo.getImageUrl())
                     .into(mIvPhoto);
+
+            mTvCaption.setText(photo.getCaption());
+            mTvLikeCounts.setText(String.format("%d likes", photo.getLikesCount()));
         }
     }
 }
