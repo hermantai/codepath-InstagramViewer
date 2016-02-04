@@ -2,6 +2,7 @@ package com.gmail.htaihm.instagramviewer;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
@@ -25,11 +26,10 @@ public class InstagramViewerActivity extends AppCompatActivity {
     private static final String CLIENT_ID = "e05c462ebd86446ea48a5af73769b602";
     private static final String END_POINT = "https://api.instagram.com/v1/media/popular";
 
-    private ArrayList<InstagramPhoto> photos;
+    private ArrayList<InstagramPhoto> mPhotos;
     private InstagramPhotosAdapter mInstagramPhotosAdapter;
 
-    @Bind(R.id.lvItems)
-    ListView mLvItems;
+    @Bind(R.id.swipeContainer) SwipeRefreshLayout mSwipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +38,24 @@ public class InstagramViewerActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        photos = new ArrayList<>();
-        mInstagramPhotosAdapter = new InstagramPhotosAdapter(this, photos);
-        mLvItems.setAdapter(mInstagramPhotosAdapter);
+        mPhotos = new ArrayList<>();
+        mInstagramPhotosAdapter = new InstagramPhotosAdapter(this, mPhotos);
+        ListView lvItems = ButterKnife.findById(this, R.id.lvItems);
+        lvItems.setAdapter(mInstagramPhotosAdapter);
 
         fetchPopularPhotos();
+
+        mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPhotos.clear();
+                fetchPopularPhotos();
+            }
+        });
+        mSwipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     public void fetchPopularPhotos() {
@@ -90,7 +103,7 @@ public class InstagramViewerActivity extends AppCompatActivity {
                         photo.setCreatedTime(
                                 photoJson.getLong("created_time"));
 
-                        photos.add(photo);
+                        mPhotos.add(photo);
                     }
                 } catch (JSONException je) {
                     handleError(
@@ -99,6 +112,7 @@ public class InstagramViewerActivity extends AppCompatActivity {
                             je);
                 }
                 mInstagramPhotosAdapter.notifyDataSetChanged();
+                mSwipeContainer.setRefreshing(false);
             }
 
             @Override
@@ -115,11 +129,12 @@ public class InstagramViewerActivity extends AppCompatActivity {
                 }
                 handleError(
                         String.format(
-                                "Error when fetching photos from instagram."
+                                "Error when fetching mPhotos from instagram."
                                         + " Status code: %d, status: %s",
                                 statusCode,
                                 responseString),
                         throwable);
+                mSwipeContainer.setRefreshing(false);
             }
         });
     }
