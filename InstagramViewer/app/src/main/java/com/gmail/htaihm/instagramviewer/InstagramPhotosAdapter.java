@@ -63,6 +63,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             mIvPhoto.setImageResource(0);
             Picasso.with(context)
                     .load(photo.getImageUrl())
+                    .placeholder(R.drawable.white_background)
                     .into(mIvPhoto);
 
             mTvCaption.setText(photo.getCaption());

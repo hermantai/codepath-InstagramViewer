@@ -48,7 +48,7 @@ public class InstagramViewerActivity extends AppCompatActivity {
         mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPhotos.clear();
+                mInstagramPhotosAdapter.clear();
                 fetchPopularPhotos();
             }
         });
