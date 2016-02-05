@@ -1,5 +1,8 @@
 package com.gmail.htaihm.instagramviewer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class InstagramPhoto {
     private String mUsername;
     private String mCaption = "hello";
@@ -7,7 +10,9 @@ public class InstagramPhoto {
     private int mImageHeight;
     private int mLikesCount;
     private String mUserProfilePictureUrl;
+    // In Unix time seconds
     private long mCreatedTime;
+    private List<InstagramPhotoComment> comments = new ArrayList<>();
 
     public String getUsername() {
         return mUsername;
@@ -63,6 +68,14 @@ public class InstagramPhoto {
 
     public void setCreatedTime(long createdTime) {
         mCreatedTime = createdTime;
+    }
+
+    public void addComment(InstagramPhotoComment comment) {
+        comments.add(comment);
+    }
+
+    public List<InstagramPhotoComment> getComments() {
+        return comments;
     }
 
     @Override

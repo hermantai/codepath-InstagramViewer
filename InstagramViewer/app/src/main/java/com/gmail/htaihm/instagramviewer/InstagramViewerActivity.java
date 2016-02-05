@@ -103,6 +103,27 @@ public class InstagramViewerActivity extends AppCompatActivity {
                         photo.setCreatedTime(
                                 photoJson.getLong("created_time"));
 
+                        JSONObject commentsJson = photoJson.optJSONObject("comments");
+
+                        if (commentsJson != null) {
+                            JSONArray commentsJsonArray = commentsJson.getJSONArray("data");
+
+                            for (int c = 0; c < commentsJsonArray.length(); c++) {
+                                JSONObject commentJson = commentsJsonArray.getJSONObject(c);
+                                InstagramPhotoComment comment = new InstagramPhotoComment();
+
+                                comment.setCreatedTime(commentJson.getLong("created_time"));
+                                comment.setComment(commentJson.getString("text"));
+                                comment.setUsername(
+                                        commentJson.getJSONObject("from").getString("username"));
+                                comment.setUserProfileUrl(
+                                        commentJson.getJSONObject("from")
+                                                .getString("profile_picture"));
+
+                                photo.addComment(comment);
+                            }
+                        }
+
                         mPhotos.add(photo);
                     }
                 } catch (JSONException je) {

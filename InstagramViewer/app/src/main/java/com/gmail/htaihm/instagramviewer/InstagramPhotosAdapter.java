@@ -2,16 +2,19 @@ package com.gmail.htaihm.instagramviewer;
 
 import android.content.Context;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,6 +50,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         @Bind(R.id.tvUsername) TextView mTvUsername;
         @Bind(R.id.tvRelativeTimestamp) TextView mTvRelativeTimestamp;
         @Bind(R.id.tvLikeCounts) TextView mTvLikeCounts;
+        @Bind(R.id.commentsContainer) LinearLayout mCommentsContainer;
 
         private ViewHolder(View view) {
             ButterKnife.bind(this, view);
@@ -68,6 +72,29 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
             mTvCaption.setText(photo.getCaption());
             mTvLikeCounts.setText(String.format("%d likes", photo.getLikesCount()));
+
+            List<InstagramPhotoComment> comments = photo.getComments();
+
+            mCommentsContainer.removeAllViews();
+            if (!comments.isEmpty()) {
+                TextView allCommentsLink = new TextView(context);
+                allCommentsLink.setText(String.format("View all %d comments", comments.size()));
+                mCommentsContainer.addView(allCommentsLink);
+
+                // Show only the last two comments. Note that comments are sorted by created_time
+                int limit = Math.min(2, comments.size());
+                LayoutInflater inflater = LayoutInflater.from(context);
+                Log.d("TODO", "Have " + comments.size() + " comments for " + photo.getCaption());
+                for (int i = 1; i <= limit; i++) {
+                    InstagramPhotoComment comment = comments.get(comments.size() - i);
+                    TextView commentView = (TextView) inflater.inflate(
+                            R.layout.item_brief_comment, null);
+                    Log.d("TODO", "comment: " + comment.getComment());
+
+                    commentView.setText(comment.getUsername() + " " + comment.getComment());
+                    mCommentsContainer.addView(commentView);
+                }
+            }
         }
     }
 }
