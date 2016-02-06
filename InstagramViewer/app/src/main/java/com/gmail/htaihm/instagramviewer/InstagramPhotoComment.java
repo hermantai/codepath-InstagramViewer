@@ -2,7 +2,7 @@ package com.gmail.htaihm.instagramviewer;
 
 public class InstagramPhotoComment {
     private String mUsername;
-    private String mUserProfileUrl;
+    private String mUserProfilePictureUrl;
     private String comment;
     // In Unix time seconds
     private long createdTime;
@@ -15,12 +15,12 @@ public class InstagramPhotoComment {
         mUsername = username;
     }
 
-    public String getUserProfileUrl() {
-        return mUserProfileUrl;
+    public String getUserProfilePictureUrl() {
+        return mUserProfilePictureUrl;
     }
 
-    public void setUserProfileUrl(String userProfileUrl) {
-        mUserProfileUrl = userProfileUrl;
+    public void setUserProfilePictureUrl(String userProfilePictureUrl) {
+        mUserProfilePictureUrl = userProfilePictureUrl;
     }
 
     public String getComment() {

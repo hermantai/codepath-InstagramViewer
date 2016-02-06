@@ -16,12 +16,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
-public class InstagramViewerActivity extends AppCompatActivity {
+public class InstagramViewerActivity extends AppCompatActivity
+        implements InstagramPhotosAdapter.ViewAllCommentsListener{
     private static final String TAG = "PhotoFetcher";
     private static final String CLIENT_ID = "e05c462ebd86446ea48a5af73769b602";
     private static final String END_POINT = "https://api.instagram.com/v1/media/popular";
@@ -40,6 +42,7 @@ public class InstagramViewerActivity extends AppCompatActivity {
 
         mPhotos = new ArrayList<>();
         mInstagramPhotosAdapter = new InstagramPhotosAdapter(this, mPhotos);
+        mInstagramPhotosAdapter.setViewAllCommentsListener(this);
         ListView lvItems = ButterKnife.findById(this, R.id.lvItems);
         lvItems.setAdapter(mInstagramPhotosAdapter);
 
@@ -116,7 +119,7 @@ public class InstagramViewerActivity extends AppCompatActivity {
                                 comment.setComment(commentJson.getString("text"));
                                 comment.setUsername(
                                         commentJson.getJSONObject("from").getString("username"));
-                                comment.setUserProfileUrl(
+                                comment.setUserProfilePictureUrl(
                                         commentJson.getJSONObject("from")
                                                 .getString("profile_picture"));
 
@@ -138,22 +141,25 @@ public class InstagramViewerActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(
-                    int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    int statusCode,
+                    Header[] headers,
+                    Throwable throwable,
+                    JSONObject errorResponse) {
                 if (BuildConfig.DEBUG) {
                     Log.d(
                             TAG,
                             String.format(
                                     "Code: %d, status: %s, headers: %s",
                                     statusCode,
-                                    responseString,
+                                    errorResponse,
                                     headers));
                 }
                 handleError(
                         String.format(
-                                "Error when fetching mPhotos from instagram."
+                                "Error when fetching photos from instagram."
                                         + " Status code: %d, status: %s",
                                 statusCode,
-                                responseString),
+                                errorResponse),
                         throwable);
                 mSwipeContainer.setRefreshing(false);
             }
@@ -163,5 +169,12 @@ public class InstagramViewerActivity extends AppCompatActivity {
     public void handleError(String msg, Throwable throwable) {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
         Log.e(TAG, msg, throwable);
+    }
+
+    @Override
+    public void onViewAllComments(List<InstagramPhotoComment> comments) {
+        InstagramPhotoCommentListFragment frag =
+                InstagramPhotoCommentListFragment.newInstance(comments);
+        frag.show(getSupportFragmentManager(),"InstagramPhotoCommentListFragment");
     }
 }

@@ -19,7 +19,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
+class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
+    public interface ViewAllCommentsListener {
+        void onViewAllComments(List<InstagramPhotoComment> comments);
+    }
+
+    private ViewAllCommentsListener mViewAllCommentsListener;
+
+    public void setViewAllCommentsListener(ViewAllCommentsListener listener) {
+        mViewAllCommentsListener = listener;
+    }
+
     public InstagramPhotosAdapter(Context context, ArrayList<InstagramPhoto> photos) {
         super(context, 0, photos);
     }
@@ -43,7 +53,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         return view;
     }
 
-    static class ViewHolder {
+    class ViewHolder {
         @Bind(R.id.ivPhoto) ImageView mIvPhoto;
         @Bind(R.id.tvCaption) TextView mTvCaption;
         @Bind(R.id.ivUserProfile) ImageView mIvUserProfile;
@@ -56,7 +66,9 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             ButterKnife.bind(this, view);
         }
 
-        private void bindPhoto(Context context, InstagramPhoto photo) {
+        private void bindPhoto(
+                Context context,
+                InstagramPhoto photo) {
             mTvUsername.setText(photo.getUsername());
             Picasso.with(context)
                     .load(photo.getUserProfilePictureUrl())
@@ -73,12 +85,21 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             mTvCaption.setText(photo.getCaption());
             mTvLikeCounts.setText(String.format("%d likes", photo.getLikesCount()));
 
-            List<InstagramPhotoComment> comments = photo.getComments();
+            final List<InstagramPhotoComment> comments = photo.getComments();
 
             mCommentsContainer.removeAllViews();
             if (!comments.isEmpty()) {
                 TextView allCommentsLink = new TextView(context);
                 allCommentsLink.setText(String.format("View all %d comments", comments.size()));
+                allCommentsLink.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        if (mViewAllCommentsListener != null) {
+                            mViewAllCommentsListener.onViewAllComments(comments);
+                        }
+
+                    }
+                });
                 mCommentsContainer.addView(allCommentsLink);
 
                 // Show only the last two comments. Note that comments are sorted by created_time
