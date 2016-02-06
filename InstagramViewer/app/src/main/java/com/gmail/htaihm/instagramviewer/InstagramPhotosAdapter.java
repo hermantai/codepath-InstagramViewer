@@ -72,6 +72,8 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             mTvUsername.setText(photo.getUsername());
             Picasso.with(context)
                     .load(photo.getUserProfilePictureUrl())
+                    .fit()
+                    .transform(UiStyle.createUserProfilePictureTransformation())
                     .into(mIvUserProfile);
             mTvRelativeTimestamp.setText(
                     DateUtils.getRelativeTimeSpanString(context, photo.getCreatedTime() * 1000));

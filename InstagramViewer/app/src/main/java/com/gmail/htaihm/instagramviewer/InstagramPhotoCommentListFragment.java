@@ -84,6 +84,8 @@ public class InstagramPhotoCommentListFragment extends DialogFragment {
                             getActivity(), comment.getCreatedTime() * 1000));
             Picasso.with(getActivity())
                     .load(comment.getUserProfilePictureUrl())
+                    .fit()
+                    .transform(UiStyle.createUserProfilePictureTransformation())
                     .into(mIvCommenterUserProfile);
         }
     }
