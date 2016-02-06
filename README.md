@@ -2,7 +2,7 @@
 
 **Instagram Viewer** is an android app that allows a user to check out popular photos from Instagram. The app utilizes Instagram API to display images and basic image information to the user.
 
-Time spent: **5** hours spent in total
+Time spent: **6.5** hours spent in total
 
 ## User Stories
 
@@ -26,7 +26,7 @@ The following **bonus** features are implemented:
 
 * [x] Show last 2 comments for each photo
 * [x] Allow user to view all comments for an image within a separate activity or dialog fragment
-* [ ] Allow video posts to be played in full-screen using the VideoView
+* [x] Allow video posts to be played in full-screen using the VideoView
 * [x] Apply the popular Butterknife annotation library to reduce view boilerplate.
 
 The following **additional** features are implemented:
@@ -44,6 +44,17 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
+
+* styling
+
+  * Not sure how to control the weight of a RecyclerView inside a FragmentDialog. wrap\_content does not do the work.
+  * Not sure if I shoudl stretch a VideoView or not.
+
+* Want to follow the iOS Instagram style that if you scroll through the
+  pictures, the username (with the relative timestamp) row stays at the top for
+  a while as you scroll the picture through it until you scroll to the point
+  that another username row touches the bottom of the original username row.
+  Not sure how to do this.
 
 ## Open-source libraries used
 

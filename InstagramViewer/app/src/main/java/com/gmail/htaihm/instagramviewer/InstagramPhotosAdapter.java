@@ -1,8 +1,8 @@
 package com.gmail.htaihm.instagramviewer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,8 +67,8 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         }
 
         private void bindPhoto(
-                Context context,
-                InstagramPhoto photo) {
+                final Context context,
+                final InstagramPhoto photo) {
             mTvUsername.setText(photo.getUsername());
             Picasso.with(context)
                     .load(photo.getUserProfilePictureUrl())
@@ -83,6 +83,15 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
                     .load(photo.getImageUrl())
                     .placeholder(R.drawable.white_background)
                     .into(mIvPhoto);
+            if (photo.getVideoUrl() != null) {
+                mIvPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = InstagramVideoActivity.newIntent(context, photo.getVideoUrl());
+                        context.startActivity(i);
+                    }
+                });
+            }
 
             mTvCaption.setText(photo.getCaption());
             mTvLikeCounts.setText(String.format("%d likes", photo.getLikesCount()));
@@ -107,12 +116,10 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
                 // Show only the last two comments. Note that comments are sorted by created_time
                 int limit = Math.min(2, comments.size());
                 LayoutInflater inflater = LayoutInflater.from(context);
-                Log.d("TODO", "Have " + comments.size() + " comments for " + photo.getCaption());
                 for (int i = 1; i <= limit; i++) {
                     InstagramPhotoComment comment = comments.get(comments.size() - i);
                     TextView commentView = (TextView) inflater.inflate(
                             R.layout.item_brief_comment, null);
-                    Log.d("TODO", "comment: " + comment.getComment());
 
                     commentView.setText(comment.getUsername() + " " + comment.getComment());
                     mCommentsContainer.addView(commentView);

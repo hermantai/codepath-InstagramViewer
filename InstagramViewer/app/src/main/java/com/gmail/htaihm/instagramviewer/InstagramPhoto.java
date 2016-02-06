@@ -1,5 +1,7 @@
 package com.gmail.htaihm.instagramviewer;
 
+import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public class InstagramPhoto {
     private String mUserProfilePictureUrl;
     // In Unix time seconds
     private long mCreatedTime;
+    private String mVideoUrl;
     private List<InstagramPhotoComment> comments = new ArrayList<>();
 
     public String getUsername() {
@@ -76,6 +79,15 @@ public class InstagramPhoto {
 
     public List<InstagramPhotoComment> getComments() {
         return comments;
+    }
+
+    @Nullable
+    public String getVideoUrl() {
+        return mVideoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        mVideoUrl = videoUrl;
     }
 
     @Override

@@ -100,9 +100,8 @@ public class InstagramPhotoCommentListFragment extends DialogFragment {
         @Override
         public CommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            CommentViewHolder vh = new CommentViewHolder(
+            return new CommentViewHolder(
                     inflater.inflate(R.layout.item_comment, parent, false));
-            return vh;
         }
 
         @Override

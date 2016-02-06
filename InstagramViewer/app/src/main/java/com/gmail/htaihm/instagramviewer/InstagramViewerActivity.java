@@ -24,7 +24,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class InstagramViewerActivity extends AppCompatActivity
         implements InstagramPhotosAdapter.ViewAllCommentsListener{
-    private static final String TAG = "PhotoFetcher";
+    private static final String TAG = "InstagramViewerActivity";
     private static final String CLIENT_ID = "e05c462ebd86446ea48a5af73769b602";
     private static final String END_POINT = "https://api.instagram.com/v1/media/popular";
 
@@ -101,6 +101,19 @@ public class InstagramViewerActivity extends AppCompatActivity
                                         .getJSONObject("images")
                                         .getJSONObject("standard_resolution")
                                         .getInt("height"));
+
+                        JSONObject videosJson = photoJson.optJSONObject("videos");
+                        if (videosJson != null) {
+                            Log.d(
+                                    TAG,
+                                    String.format(
+                                            "%d photo with user %s has a video",
+                                            i,
+                                            photo.getUsername()));
+                            photo.setVideoUrl(
+                                    videosJson.getJSONObject("low_bandwidth").getString("url"));
+                        }
+
                         photo.setLikesCount(
                                 photoJson.getJSONObject("likes").getInt("count"));
                         photo.setCreatedTime(
