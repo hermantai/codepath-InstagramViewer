@@ -2,7 +2,7 @@ package com.gmail.htaihm.instagramviewer;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.format.DateUtils;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +76,7 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
                     .transform(UiStyle.createUserProfilePictureTransformation())
                     .into(mIvUserProfile);
             mTvRelativeTimestamp.setText(
-                    DateUtils.getRelativeTimeSpanString(context, photo.getCreatedTime() * 1000));
+                    UiStyle.getRelativeTimestampStyled(context, photo.getCreatedTime() * 1000));
 
             mIvPhoto.setImageResource(0);
             Picasso.with(context)
@@ -93,16 +93,22 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
                 });
             }
 
-            mTvCaption.setText(photo.getCaption());
-            mTvLikeCounts.setText(String.format("%d likes", photo.getLikesCount()));
+            mTvCaption.setText(UiStyle.getCommentWithUsernameStyled(
+                    context, photo.getUsername(), photo.getCaption()));
+            mTvLikeCounts.setText(UiStyle.getLikesCountStyled(context, photo.getLikesCount()));
 
             final List<InstagramPhotoComment> comments = photo.getComments();
 
             mCommentsContainer.removeAllViews();
             if (!comments.isEmpty()) {
-                TextView allCommentsLink = new TextView(context);
-                allCommentsLink.setText(String.format("View all %d comments", comments.size()));
-                allCommentsLink.setOnClickListener(new View.OnClickListener(){
+                final TextView allCommentsLink = new TextView(context);
+                allCommentsLink.setText(
+                        "View all " + comments.size() + " comments");
+                allCommentsLink.setTextColor(
+                        ContextCompat.getColorStateList(
+                                context, R.color.color_state_list_view_all_comments));
+
+                allCommentsLink.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mViewAllCommentsListener != null) {
@@ -111,6 +117,7 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
                     }
                 });
+
                 mCommentsContainer.addView(allCommentsLink);
 
                 // Show only the last two comments. Note that comments are sorted by created_time
@@ -120,8 +127,9 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
                     InstagramPhotoComment comment = comments.get(comments.size() - i);
                     TextView commentView = (TextView) inflater.inflate(
                             R.layout.item_brief_comment, null);
-
-                    commentView.setText(comment.getUsername() + " " + comment.getComment());
+                    commentView.setText(
+                            UiStyle.getCommentWithUsernameStyled(
+                                    context, comment.getUsername(), comment.getComment()));
                     mCommentsContainer.addView(commentView);
                 }
             }

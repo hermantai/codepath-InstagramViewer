@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,8 +79,9 @@ public class InstagramPhotoCommentListFragment extends DialogFragment {
             mTvCommenterUsername.setText(comment.getUsername());
             mTvCommenterComment.setText(comment.getComment());
             mTvCommenterRelativeTimestamp.setText(
-                    DateUtils.getRelativeTimeSpanString(
+                    UiStyle.getRelativeTimestampStyled(
                             getActivity(), comment.getCreatedTime() * 1000));
+
             Picasso.with(getActivity())
                     .load(comment.getUserProfilePictureUrl())
                     .fit()

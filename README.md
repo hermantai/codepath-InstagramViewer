@@ -2,7 +2,7 @@
 
 **Instagram Viewer** is an android app that allows a user to check out popular photos from Instagram. The app utilizes Instagram API to display images and basic image information to the user.
 
-Time spent: **6.5** hours spent in total
+Time spent: **9** hours spent in total
 
 ## User Stories
 
@@ -49,6 +49,7 @@ Describe any challenges encountered while building the app.
 
   * Not sure how to control the weight of a RecyclerView inside a FragmentDialog. wrap\_content does not do the work.
   * Not sure if I shoudl stretch a VideoView or not.
+  * Use span for styling text is hard (html is easier but span seems cooler...)
 
 * Want to follow the iOS Instagram style that if you scroll through the
   pictures, the username (with the relative timestamp) row stays at the top for

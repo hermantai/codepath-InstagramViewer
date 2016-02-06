@@ -26,7 +26,7 @@
 
     <style name="username">
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/username</item>
+        <item name="android:textColor">@color/instagram_blue</item>
     </style>
 
 </resources>

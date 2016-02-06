@@ -5,5 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="instagram_user_photo_divider">#d3d3d3</color>
-    <color name="username">#00004d</color>
+    <color name="instagram_blue">#125688</color>
+    <color name="light_gray">#4d4d4d</color>
+    <color name="gray">#333333</color>
 </resources>
