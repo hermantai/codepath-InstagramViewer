@@ -61,6 +61,10 @@ Describe any challenges encountered while building the app.
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
+- [ButterKnife](http://jakewharton.github.io/butterknife/) - Field and method binding for Android views
+- [RoundedImageView](https://github.com/vinc3m1/RoundedImageView) - A fast
+  ImageView (and Drawable) that supports rounded corners (and ovals or circles)
+  based on the original example from [Romain Guy](http://www.curious-creature.org/2012/12/11/android-recipe-1-image-with-rounded-corners/)
 
 ## License
 
