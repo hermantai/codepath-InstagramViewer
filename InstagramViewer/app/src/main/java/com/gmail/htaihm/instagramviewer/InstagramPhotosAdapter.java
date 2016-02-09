@@ -6,7 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,47 +18,115 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
-class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
+class InstagramPhotosAdapter extends BaseAdapter implements StickyListHeadersAdapter {
     public interface ViewAllCommentsListener {
+
         void onViewAllComments(List<InstagramPhotoComment> comments);
     }
-
     private ViewAllCommentsListener mViewAllCommentsListener;
 
+    private List<InstagramPhoto> mPhotos;
+    private Context mContext;
+    private LayoutInflater mInflater;
     public void setViewAllCommentsListener(ViewAllCommentsListener listener) {
         mViewAllCommentsListener = listener;
     }
 
     public InstagramPhotosAdapter(Context context, ArrayList<InstagramPhoto> photos) {
-        super(context, 0, photos);
+        mContext = context;
+        mPhotos = photos;
+        mInflater = LayoutInflater.from(context);
+    }
+
+    @Override
+    public int getCount() {
+        return mPhotos.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mPhotos.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         ViewHolder viewHolder;
 
-        InstagramPhoto photo = getItem(position);
+        InstagramPhoto photo = (InstagramPhoto) getItem(position);
 
         if (view == null) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.item_photo, parent, false);
+            view = mInflater.inflate(R.layout.item_photo, parent, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.bindPhoto(getContext(), photo);
+        viewHolder.bindPhoto(mContext, photo);
 
         return view;
+    }
+
+    @Override
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+        HeaderViewHolder holder;
+
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.item_photo_header, parent, false);
+
+            holder = new HeaderViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (HeaderViewHolder) convertView.getTag();
+        }
+
+        InstagramPhoto photo = (InstagramPhoto) getItem(position);
+        holder.bindPhoto(mContext, photo);
+        return convertView;
+    }
+
+    @Override
+    public long getHeaderId(int position) {
+        return position;
+    }
+
+    public void clear() {
+        mPhotos.clear();
+    }
+
+    class HeaderViewHolder {
+        @Bind(R.id.ivUserProfile) ImageView mIvUserProfile;
+        @Bind(R.id.tvUsername) TextView mTvUsername;
+        @Bind(R.id.tvRelativeTimestamp) TextView mTvRelativeTimestamp;
+
+        private HeaderViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
+
+        private void bindPhoto(Context context, final InstagramPhoto photo) {
+            Picasso.with(context)
+                    .load(photo.getUserProfilePictureUrl())
+                    .fit()
+                    .transform(UiStyle.createUserProfilePictureTransformation())
+                    .into(mIvUserProfile);
+            mTvUsername.setText(photo.getUsername());
+            mTvRelativeTimestamp.setText(
+                    UiStyle.getRelativeTimestampStyled(context, photo.getCreatedTime() * 1000));
+
+        }
+
     }
 
     class ViewHolder {
         @Bind(R.id.ivPhoto) ImageView mIvPhoto;
         @Bind(R.id.tvCaption) TextView mTvCaption;
-        @Bind(R.id.ivUserProfile) ImageView mIvUserProfile;
-        @Bind(R.id.tvUsername) TextView mTvUsername;
-        @Bind(R.id.tvRelativeTimestamp) TextView mTvRelativeTimestamp;
         @Bind(R.id.tvLikeCounts) TextView mTvLikeCounts;
         @Bind(R.id.commentsContainer) LinearLayout mCommentsContainer;
 
@@ -69,15 +137,6 @@ class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         private void bindPhoto(
                 final Context context,
                 final InstagramPhoto photo) {
-            mTvUsername.setText(photo.getUsername());
-            Picasso.with(context)
-                    .load(photo.getUserProfilePictureUrl())
-                    .fit()
-                    .transform(UiStyle.createUserProfilePictureTransformation())
-                    .into(mIvUserProfile);
-            mTvRelativeTimestamp.setText(
-                    UiStyle.getRelativeTimestampStyled(context, photo.getCreatedTime() * 1000));
-
             mIvPhoto.setImageResource(0);
             Picasso.with(context)
                     .load(photo.getImageUrl())

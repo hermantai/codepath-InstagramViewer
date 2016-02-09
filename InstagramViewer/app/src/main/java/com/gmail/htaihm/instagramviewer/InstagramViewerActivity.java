@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -21,6 +20,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 public class InstagramViewerActivity extends AppCompatActivity
         implements InstagramPhotosAdapter.ViewAllCommentsListener{
@@ -43,8 +43,8 @@ public class InstagramViewerActivity extends AppCompatActivity
         mPhotos = new ArrayList<>();
         mInstagramPhotosAdapter = new InstagramPhotosAdapter(this, mPhotos);
         mInstagramPhotosAdapter.setViewAllCommentsListener(this);
-        ListView lvItems = ButterKnife.findById(this, R.id.lvItems);
-        lvItems.setAdapter(mInstagramPhotosAdapter);
+        StickyListHeadersListView slhlvItems = ButterKnife.findById(this, R.id.slhlvItems);
+        slhlvItems.setAdapter(mInstagramPhotosAdapter);
 
         fetchPopularPhotos();
 
